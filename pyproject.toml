@@ -7,6 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.11.4",
     "gridworks-journalkeeper @ git+https://github.com/thegridelectric/gridworks-journalkeeper.git",
+    "pandas>=2.2.3",
+    "numpy>=2.2.5",
 ]
 
 [build-system]

@@ -5,6 +5,16 @@ build/
 dist/
 wheels/
 *.egg-info
+.DS_Store
+*scratch*
 
 # Virtual environments
 .venv
+
+# Environment variables
+.env
+
+# CSV data
+*energy_data*
+
+add_house.py
