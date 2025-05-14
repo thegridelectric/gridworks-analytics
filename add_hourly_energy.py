@@ -4,7 +4,7 @@ import dotenv
 import pendulum
 from sqlalchemy import create_engine, asc, or_
 from sqlalchemy.orm import sessionmaker
-from gjk.models import MessageSql
+from gwanalytics.models import MessageSql
 from typing import List
 import pandas as pd
 import numpy as np

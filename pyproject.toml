@@ -6,9 +6,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "pydantic>=2.11.4",
-    "gridworks-journalkeeper @ git+https://github.com/thegridelectric/gridworks-journalkeeper.git",
     "pandas>=2.2.3",
     "numpy>=2.2.5",
+    "sqlalchemy>=2.0.40",
+    "pendulum>=3.1.0",
+    "dotenv>=0.9.9",
 ]
 
 [build-system]
