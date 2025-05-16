@@ -12,6 +12,7 @@ dependencies = [
     "pendulum>=3.1.0",
     "dotenv>=0.9.9",
     "matplotlib>=3.10.3",
+    "psycopg2-binary>=2.9.10",
 ]
 
 [build-system]

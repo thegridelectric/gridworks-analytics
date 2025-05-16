@@ -11,9 +11,9 @@ Base = declarative_base()
 
 class HourlyDataChannel(Base):
     __tablename__ = 'hourly_data_channels'
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, primary_key=True)
+    version = Column(String, nullable=False, primary_key=True)
     time_created_s = Column(Integer, nullable=False)
-    version = Column(String, nullable=False)
 
     __table_args__ = (
         UniqueConstraint('name', 'version', name='unique_version'),
@@ -272,3 +272,5 @@ session.add_all([
     zone4_heatcall_fraction
 ])
 session.commit()
+
+print("Done adding data channels")
