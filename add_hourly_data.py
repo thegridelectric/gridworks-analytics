@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 dotenv.load_dotenv()
 
-engine_gbo = create_engine(os.getenv("GBO_DB_URL"))
+engine_analytics = create_engine(os.getenv("ANALYTICS_DB_URL"))
 Base = declarative_base()
 
 class HourlyElectricity(Base):
@@ -66,13 +66,13 @@ class HourlyElectricity(Base):
     )
 
 # Drop existing tables
-# Base.metadata.drop_all(engine_gbo)
-# Base.metadata.create_all(engine_gbo)
+# Base.metadata.drop_all(engine_analytics)
+# Base.metadata.create_all(engine_analytics)
 # if os.path.exists(f"energy_data_beech.csv"):
 #     os.remove(f"energy_data_beech.csv")
 
-# SessionGbo = sessionmaker(bind=engine_gbo)
-# session = SessionGbo()
+# SessionAnalytics = sessionmaker(bind=engine_analytics)
+# session = SessionAnalytics()
 # session.query(HourlyElectricity).filter(HourlyElectricity.short_alias == "fir").delete()
 # session.commit()
 # session.close()
@@ -84,8 +84,8 @@ class EnergyDataset():
         engine = create_engine(os.getenv("GJK_DB_URL"))
         Session = sessionmaker(bind=engine)
         self.session = Session()
-        SessionGbo = sessionmaker(bind=engine_gbo)
-        self.session_gbo = SessionGbo()
+        SessionAnalytics = sessionmaker(bind=engine_analytics)
+        self.session_analytics = SessionAnalytics()
         self.house_alias = house_alias
         self.dataset_file = f"energy_data_{self.house_alias}.csv"
         self.start_ms = start_ms
@@ -707,32 +707,32 @@ class EnergyDataset():
             rows.append(row)
         
         try:
-            self.session_gbo.add_all(rows)
-            self.session_gbo.commit()
+            self.session_analytics.add_all(rows)
+            self.session_analytics.commit()
             print(f"Successfully inserted {len(rows)} new rows in {int(time.time()-st)} seconds")
         except Exception as e:
             if 'hour_house_unique' in str(e) or "hourly_electricity_pkey" in str(e):  # Check if it's our unique constraint violation
                 print("Some rows already exist in the database, filtering them out...")
-                self.session_gbo.rollback()
+                self.session_analytics.rollback()
                 conflicting_rows = []
                 for row in rows:
                     try:
-                        self.session_gbo.add(row)
-                        self.session_gbo.commit()
+                        self.session_analytics.add(row)
+                        self.session_analytics.commit()
                     except Exception:
-                        self.session_gbo.rollback()
+                        self.session_analytics.rollback()
                         conflicting_rows.append(row)
                 # Filter out the conflicting rows
                 rows = [row for row in rows if row not in conflicting_rows]
                 # Insert the remaining rows
                 if rows:
-                    self.session_gbo.add_all(rows)
-                    self.session_gbo.commit()
+                    self.session_analytics.add_all(rows)
+                    self.session_analytics.commit()
                     print(f"Successfully inserted {len(rows)} new rows")
                 else:
                     print("All rows already existed in the database")
             else:
-                self.session_gbo.rollback()
+                self.session_analytics.rollback()
                 raise Exception(f"Unexpected error: {e}")
 
         formatted_data['datetime_str'] = formatted_data['hour_start_ms'].apply(self.unix_ms_to_date)
