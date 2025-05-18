@@ -440,7 +440,7 @@ class EnergyDataset():
 
             # Storage energy
             if (not [c for c in store_required_channels if c not in csv_values]
-                or ('store-pump-pwr' in csv_values and not [c for c in store_required_channels if c not in csv_values and 'store-flow' not in c and 'primary-flow' not in c])):
+                or ('store-pump-pwr' in csv_values and 'primary-flow' in df and not [c for c in store_required_channels if c not in csv_values and 'store-flow' not in c and 'primary-flow' not in c])):
 
                 if ('store-pump-pwr' in csv_values and hour_end_ms < self.stop_flow_processing_date_ms) or 'store-flow' not in csv_values:
                     store_flow_processed = []
@@ -757,7 +757,7 @@ def generate(house_alias, start_year, start_month, start_day, end_year, end_mont
     s.generate_dataset()
 
 if __name__ == '__main__':
-    houses_to_generate = ['oak', 'fir', 'maple', 'elm']
+    houses_to_generate = ['beech', 'oak', 'fir', 'maple', 'elm']
     for house in houses_to_generate:
         generate(
             house_alias=house, 
